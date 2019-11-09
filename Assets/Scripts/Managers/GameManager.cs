@@ -4,18 +4,22 @@ using UnityEngine;
 
 public class GameManager : Singleton<GameManager>
 {
+    [SerializeField]
+    private GameObject mainMenuUI;
+
     public static TestService Test { get { return SingleScript<TestService>.Instance; } }
 
     public static string testString = "Peepz";
 
     private void Awake()
     {
-
+        if (mainMenuUI == null) mainMenuUI = GameObject.Find("MainMenuUI");
     }
 
     // Start is called before the first frame update
     void Start()
     {
+
     }
 
     // Update is called once per frame
@@ -31,6 +35,7 @@ public class GameManager : Singleton<GameManager>
         }
         if (Input.GetKey(KeyCode.L))
         {
+            //string jsonParams = EventManager.eventHelper.CreateEventString();
             var eventParams = ScriptableObject.CreateInstance<EventParams>();
             eventParams.numberInfo = 888;
             eventParams.ints[0] = 1;
@@ -39,5 +44,11 @@ public class GameManager : Singleton<GameManager>
             string jsonParams = JsonUtility.ToJson(eventParams);
             EventManager.TriggerEvent("test", jsonParams);
         }
+    }
+
+    public void OnPlayButtonPressed()
+    {
+        mainMenuUI.SetActive(false);
+        EventManager.TriggerEvent("PlayButtonPressed"); //scripts can listen to this event to start certain actions
     }
 }

@@ -21,6 +21,7 @@ public class SecondTest : MonoBehaviour
     void Start()
     {
         EventManager.StartListening("test", EventListener);
+        EventManager.StartListening("PlayButtonPressed", StartPlaying);
     }
 
     // Update is called once per frame
@@ -52,5 +53,10 @@ public class SecondTest : MonoBehaviour
         Debug.Log("listened: " + eventParams.numberInfo);
         Debug.Log(eventParams.ints[0]);
         Debug.Log(eventParams.ints[1]);
+    }
+
+    void StartPlaying()
+    {
+        Debug.Log("startPLaying");
     }
 }

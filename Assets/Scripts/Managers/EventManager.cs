@@ -9,15 +9,18 @@ public class ThisEvent : UnityEvent<string> { }
 
 public class EventManager : Singleton<EventManager>
 {
-    //private Dictionary<string, UnityEvent> eventDictionary;
-    private Dictionary<string, ThisEvent> eventDictionary;
+    public static EventHelper eventHelper { get { return SingleScript<EventHelper>.Instance; } }
+
+    private Dictionary<string, UnityEvent> eventDictionary;
+
+    private Dictionary<string, ThisEvent> eventParamDictionary;
 
     private void Awake()
     {
-        if (eventDictionary == null)
+        if (eventParamDictionary == null)
         {
-            //eventDictionary = new Dictionary<string, UnityEvent>();
-            eventDictionary = new Dictionary<string, ThisEvent>();
+            eventDictionary = new Dictionary<string, UnityEvent>();
+            eventParamDictionary = new Dictionary<string, ThisEvent>();
         }
     }
 
@@ -25,7 +28,7 @@ public class EventManager : Singleton<EventManager>
     public static void StartListening(string eventName, UnityAction<string> listener)
     {
         ThisEvent thisEvent = null;
-        if (Instance.eventDictionary.TryGetValue(eventName, out thisEvent))
+        if (Instance.eventParamDictionary.TryGetValue(eventName, out thisEvent))
         {
             thisEvent.AddListener(listener);
         }
@@ -33,7 +36,7 @@ public class EventManager : Singleton<EventManager>
         {
             thisEvent = new ThisEvent();
             thisEvent.AddListener(listener);
-            Instance.eventDictionary.Add(eventName, thisEvent);
+            Instance.eventParamDictionary.Add(eventName, thisEvent);
         }
     }
 
@@ -42,7 +45,7 @@ public class EventManager : Singleton<EventManager>
     {
         if (Instance == null) return;
         ThisEvent thisEvent = null;
-        if (Instance.eventDictionary.TryGetValue(eventName, out thisEvent))
+        if (Instance.eventParamDictionary.TryGetValue(eventName, out thisEvent))
         {
             thisEvent.RemoveListener(listener);
         }
@@ -52,13 +55,15 @@ public class EventManager : Singleton<EventManager>
     public static void TriggerEvent(string eventName, string json)
     {
         ThisEvent thisEvent = null;
-        if (Instance.eventDictionary.TryGetValue(eventName, out thisEvent))
+        if (Instance.eventParamDictionary.TryGetValue(eventName, out thisEvent))
         {
             // finally passes the message.
             thisEvent.Invoke(json);
         }
     }
-    /*
+    
+
+    //Paramless events
     public static void StartListening(string eventName, UnityAction listener)
     {
         UnityEvent thisEvent = null;
@@ -91,5 +96,5 @@ public class EventManager : Singleton<EventManager>
         {
             thisEvent.Invoke();
         }
-    }*/
+    }
 }

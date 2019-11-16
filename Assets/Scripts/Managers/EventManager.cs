@@ -5,7 +5,7 @@ using UnityEngine.Events;
 
 // Replacement of the basic Unityevent with a unity event that has a string that will be used to serialize JSON
 [System.Serializable]
-public class ThisEvent : UnityEvent<string> { }
+public class ThisEvent : UnityEvent<EventParams> { }
 
 public class EventManager : Singleton<EventManager>
 {
@@ -25,7 +25,7 @@ public class EventManager : Singleton<EventManager>
     }
 
     // function called to insert an event in the dictionary
-    public static void StartListening(string eventName, UnityAction<string> listener)
+    public static void StartListening(string eventName, UnityAction<EventParams> listener)
     {
         ThisEvent thisEvent = null;
         if (Instance.eventParamDictionary.TryGetValue(eventName, out thisEvent))
@@ -41,7 +41,7 @@ public class EventManager : Singleton<EventManager>
     }
 
     // removes an event from the dictionary
-    public static void StopListening(string eventName, UnityAction<string> listener)
+    public static void StopListening(string eventName, UnityAction<EventParams> listener)
     {
         if (Instance == null) return;
         ThisEvent thisEvent = null;
@@ -52,13 +52,13 @@ public class EventManager : Singleton<EventManager>
     }
 
     // event trigger with a string passed as a parameter.
-    public static void TriggerEvent(string eventName, string json)
+    public static void TriggerEvent(string eventName, EventParams eventParams)
     {
         ThisEvent thisEvent = null;
         if (Instance.eventParamDictionary.TryGetValue(eventName, out thisEvent))
         {
             // finally passes the message.
-            thisEvent.Invoke(json);
+            thisEvent.Invoke(eventParams);
         }
     }
     

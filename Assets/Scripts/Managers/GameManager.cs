@@ -41,8 +41,7 @@ public class GameManager : Singleton<GameManager>
             eventParams.ints[0] = 1;
             eventParams.ints[1] = 2321;
 
-            string jsonParams = JsonUtility.ToJson(eventParams);
-            EventManager.TriggerEvent("test", jsonParams);
+            EventManager.TriggerEvent("test", eventParams);
         }
     }
 

@@ -9,12 +9,12 @@ public class SecondTest : MonoBehaviour
     public static TestService Test { get { return SingleScript<TestService>.Instance; } }
 
     // make sure to include the string here.
-    private UnityAction<string> EventListener;
+    private UnityAction<EventParams> EventListener;
 
     private void Awake()
     {
         //EventListener = new UnityAction<string>(SomeListener);
-        EventListener = new UnityAction<string>(SomeListener);
+        EventListener = new UnityAction<EventParams>(SomeListener);
     }
 
     // Start is called before the first frame update
@@ -46,10 +46,8 @@ public class SecondTest : MonoBehaviour
         }
     }
 
-    void SomeListener(string jsonParams)
+    void SomeListener(EventParams eventParams)
     {
-        var eventParams = ScriptableObject.CreateInstance<EventParams>();
-        JsonUtility.FromJsonOverwrite(jsonParams, eventParams);
         Debug.Log("listened: " + eventParams.numberInfo);
         Debug.Log(eventParams.ints[0]);
         Debug.Log(eventParams.ints[1]);
